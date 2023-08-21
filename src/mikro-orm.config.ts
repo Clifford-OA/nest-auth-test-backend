@@ -15,23 +15,9 @@ export default {
   entities: entities,
   metadataProvider: TsMorphMetadataProvider,
   debug: configService.get('NODE_ENV') == 'development',
-  migrations: {
-    pathTs: './src/db/migrations',
-    path: './dist/db/migrations',
-    disableForeignKeys: false,
-  },
-  // seeder: {
-  //   pathTs: './src/db/seeders',
-  //   path: './dist/db/seeders',
-  //   fileName: (className: string) => {
-  //     return className
-  //       .substring(0, className.length - 'Seeder'.length) // Remove 'Seeder' suffix
-  //       .replace(
-  //         // Convert to kebab case
-  //         /[A-Z]+(?![a-z])|[A-Z]/g,
-  //         ($, ofs) => (ofs ? '-' : '') + $.toLowerCase(),
-  //       )
-  //       .concat('.seeder'); // Add suffix
-  //   },
+  // migrations: {
+  //   pathTs: './src/db/migrations',
+  //   path: './dist/db/migrations',
+  //   disableForeignKeys: false,
   // },
 } as MikroOrmModuleSyncOptions;

@@ -8,7 +8,7 @@ export enum Role {
 
 @Entity({ customRepository: () => UserRepository })
 export class User {
-  @PrimaryKey()
+  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   id: string;
 
   @Enum({ default: Role.User })
@@ -21,7 +21,7 @@ export class User {
   emailVerified = false;
 
   @Property({ hidden: true })
-  passwordHash?: string;
+  passwordHash: string;
 
   @Property({ hidden: true })
   passwordResetKey?: string;
