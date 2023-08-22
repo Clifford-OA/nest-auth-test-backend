@@ -9,6 +9,7 @@ async function bootstrap() {
     .setTitle('Test Endpoints')
     .setVersion('1.0')
     .addTag('Auth Test')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
