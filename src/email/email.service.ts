@@ -15,28 +15,41 @@ export class EmailService {
   //   private readonly maxRequestsPerSecond = 1;
   //   private readonly minRequestInterval = 1000 / this.maxRequestsPerSecond;
   //   private lastRequestTime = 0;
-
+  //
   constructor() {
     if (process.env.DISABLE_EMAILS !== 'true') {
       this.transporter = nodemailer.createTransport({
-        host: process.env.SMPT_HOST,
-        port: Number(process.env.SMPT_PORT),
+        host: process.env.SMTP_HOST,
+        secure: false,
+        port: Number(process.env.SMTP_PORT),
         auth: {
-          user: process.env.SMPT_USERNAME,
-          pass: process.env.SMPT_PASSWORD,
+          user: process.env.SMTP_USERNAME,
+          // pass: process.env.SMTP_PASSWORD,
         },
+        // tls: {
+        //   rejectUnauthorized: false,
+        // },
       });
+
+      // this.transporter.verify(function (error, success) {
+      //   console.log('verying...........');
+      //   if (error) {
+      //     console.log(error);
+      //   } else {
+      //     console.log(success, 'Server is ready to take our messages');
+      //   }
+      // });
     }
   }
 
-  //   private onModuleInit() {
-  //     ///
-  //     this.sendEmail({
-  //       recipients: ['clifford.osei@accede.dev'],
-  //       subject: 'Test Email',
-  //       templateId: 'authentication',
-  //     });
-  //   }
+  private onModuleInit() {
+    ///
+    this.sendEmail({
+      recipients: ['clifford.osei@accede.dev'],
+      subject: 'Test Email',
+      templateId: 'authentication',
+    });
+  }
 
   async sendEmail(input: SendEmailInput) {
     const templateHtml = await fs
