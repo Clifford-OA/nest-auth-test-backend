@@ -1,3 +1,5 @@
+import { AzureBlobController } from './controllers/azure-blob.controller';
+import { AzureBlobService } from './services/azure-blob.service';
 import { EmailService } from './email/email.service';
 import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
@@ -19,9 +21,10 @@ import { JwtStrategy } from './misc/jwt.strategy';
     MikroOrmModule.forFeature(entities),
     JwtModule.register({ secret: process.env.JWT_SECRET }),
   ],
-  controllers: [AuthController, UserController],
+  controllers: [AzureBlobController, AuthController, UserController],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },
+    AzureBlobService,
     JwtStrategy,
     AuthService,
     UserService,

@@ -42,14 +42,14 @@ export class EmailService {
     }
   }
 
-  private onModuleInit() {
-    ///
-    this.sendEmail({
-      recipients: ['clifford.osei@accede.dev'],
-      subject: 'Test Email',
-      templateId: 'authentication',
-    });
-  }
+  // private onModuleInit() {
+  //   ///
+  //   this.sendEmail({
+  //     recipients: ['clifford.osei@accede.dev'],
+  //     subject: 'Test Email',
+  //     templateId: 'authentication',
+  //   });
+  // }
 
   async sendEmail(input: SendEmailInput) {
     const templateHtml = await fs

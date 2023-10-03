@@ -14,7 +14,11 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document, {
-    swaggerOptions: { filter: true, tagsSorter: 'alpha' },
+    swaggerOptions: {
+      filter: true,
+      tagsSorter: 'alpha',
+      persistAuthorization: true,
+    },
   });
 
   await app.listen(3000);
