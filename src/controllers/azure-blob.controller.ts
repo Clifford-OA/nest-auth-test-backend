@@ -26,7 +26,6 @@ export class AzureBlobController {
   })
   @ApiOperation({ summary: 'Upload file here' })
   async azureUploadFile(@UploadedFile() image?: Express.Multer.File) {
-    await this.azureBlobService.upload(image);
-    return 'uploaded';
+    return await this.azureBlobService.upload(image);
   }
 }
