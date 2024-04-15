@@ -13,6 +13,7 @@ import { UserController } from './controllers/user.controller';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtStrategy } from './misc/jwt.strategy';
+import { GoogleOauthStrategy } from './misc/google-oauth.strategy';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { JwtStrategy } from './misc/jwt.strategy';
     AuthService,
     UserService,
     EmailService,
+    GoogleOauthStrategy,
   ],
 })
 export class AppModule {}
