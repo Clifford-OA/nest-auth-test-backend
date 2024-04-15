@@ -21,7 +21,7 @@ export class User {
   emailVerified = false;
 
   @Property({ hidden: true })
-  passwordHash: string;
+  passwordHash?: string;
 
   @Property({ hidden: true })
   passwordResetKey?: string;

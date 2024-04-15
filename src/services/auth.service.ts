@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User, UserRepository } from 'src/db/entities/user.entity';
+import { Role, User, UserRepository } from 'src/db/entities/user.entity';
 import { CreateUserInput, LoginInput, RefreshInput } from 'src/dtos/user.dto';
 import bcrypt from 'bcryptjs';
 import { FilterQuery } from '@mikro-orm/core';
@@ -54,6 +54,23 @@ export class AuthService {
       }
     }
     throw new BadRequestException('Invalid credentials');
+  }
+
+  async googleOAuth(user: any) {
+    if (!user) throw new Error('User not Found');
+
+    // business logic here to return token
+    this.logger.log(user, ' business logic here......');
+    return this.generateTokens({
+      id: user.id,
+      email: user.email,
+      emailVerified: true,
+      firstName: user.name,
+      fullName: user.name,
+      lastName: user.name,
+      role: Role.User,
+      imgUrl: user.picture,
+    });
   }
 
   async refresh(input: RefreshInput): Promise<ApiTokensDto> {

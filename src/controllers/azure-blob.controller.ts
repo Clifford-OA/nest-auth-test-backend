@@ -20,8 +20,11 @@ export class AzureBlobController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
-      properties: { image: { type: 'string', format: 'binary' } },
       type: 'object',
+      properties: {
+        image: { type: 'string', format: 'binary' },
+        name: { type: 'string' },
+      },
     },
   })
   @ApiOperation({ summary: 'Upload file here' })
