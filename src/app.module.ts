@@ -1,3 +1,6 @@
+import { WebhooksController } from './controllers/webhooks.controller';
+import { PaymentController } from './controllers/payment.controller';
+import { PaymentService } from './services/payment.service';
 import { AzureBlobController } from './controllers/azure-blob.controller';
 import { AzureBlobService } from './services/azure-blob.service';
 import { EmailService } from './email/email.service';
@@ -14,6 +17,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtStrategy } from './misc/jwt.strategy';
 import { GoogleOauthStrategy } from './misc/google-oauth.strategy';
+import { RequestContextModule } from 'nestjs-request-context';
 
 @Module({
   imports: [
@@ -21,9 +25,17 @@ import { GoogleOauthStrategy } from './misc/google-oauth.strategy';
     MikroOrmModule.forRoot(),
     MikroOrmModule.forFeature(entities),
     JwtModule.register({ secret: process.env.JWT_SECRET }),
+    RequestContextModule,
   ],
-  controllers: [AzureBlobController, AuthController, UserController],
+  controllers: [
+    WebhooksController,
+    PaymentController,
+    AzureBlobController,
+    AuthController,
+    UserController,
+  ],
   providers: [
+    PaymentService,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     AzureBlobService,
     JwtStrategy,
