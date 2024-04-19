@@ -6,8 +6,8 @@ import {
   Property,
   Ref,
 } from '@mikro-orm/core';
-import { User } from './user.entity';
 import { EntityRepository } from '@mikro-orm/postgresql';
+import { Tenant } from './tenant.entity';
 
 export enum TransactionStatus {
   Pending,
@@ -29,8 +29,8 @@ export class Payment {
   @Property()
   amount: number = 0;
 
-  @ManyToOne(() => User, { ref: true })
-  user: Ref<User>;
+  @ManyToOne(() => Tenant, { ref: true })
+  tenant: Ref<Tenant>;
 
   @Enum({ default: TransactionStatus.Pending })
   status = TransactionStatus.Pending;

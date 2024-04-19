@@ -6,10 +6,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Role, User, UserRepository } from 'src/db/entities/user.entity';
 import { CreateUserInput, LoginInput, RefreshInput } from 'src/dtos/user.dto';
 import bcrypt from 'bcryptjs';
-import { FilterQuery } from '@mikro-orm/core';
 import { ApiTokensDto } from 'src/dtos/api-token.dto';
 import { ConfigService } from '@nestjs/config';
 
@@ -20,39 +18,40 @@ export class AuthService {
   constructor(
     private readonly em: EntityManager,
     private readonly jwtService: JwtService,
-    private readonly userRepo: UserRepository,
     configService: ConfigService,
   ) {
     this.jwtRefreshSecret = configService.get('JWT_REFRESH_SECRET');
   }
 
   async registerUser(input: CreateUserInput) {
+    input;
     // check whether email exist
-    let user = await this.userRepo.findOne({ email: input.email });
+    // let user = await this.userRepo.findOne({ email: input.email });
 
-    if (user) throw new BadRequestException('Email already exist');
-    this.logger.log(`Started registering a user: ${input.email}`);
+    // if (user) throw new BadRequestException('Email already exist');
+    // this.logger.log(`Started registering a user: ${input.email}`);
 
-    user = this.userRepo.create({
-      ...input,
-      passwordHash: await this.hashPassword(input.password),
-    });
+    // user = this.userRepo.create({
+    //   ...input,
+    //   passwordHash: await this.hashPassword(input.password),
+    // });
 
-    await this.em.flush();
+    // await this.em.flush();
   }
 
   async loginUser(input: LoginInput) {
-    const filter: FilterQuery<User> = { email: input.email };
+    input;
+    // const filter: FilterQuery<User> = { email: input.email };
 
-    const user = await this.userRepo.findOne(filter);
+    // const user = await this.userRepo.findOne(filter);
 
-    if (user) {
-      const isMatch = await bcrypt.compare(input.password, user.passwordHash);
-      if (isMatch) {
-        this.logger.log(`User logged in: ${input.email}`);
-        return await this.generateTokens(user);
-      }
-    }
+    // if (user) {
+    //   const isMatch = await bcrypt.compare(input.password, user.passwordHash);
+    //   if (isMatch) {
+    //     this.logger.log(`User logged in: ${input.email}`);
+    //     return await this.generateTokens(user);
+    //   }
+    // }
     throw new BadRequestException('Invalid credentials');
   }
 
@@ -61,32 +60,27 @@ export class AuthService {
 
     // business logic here to return token
     this.logger.log(user, ' business logic here......');
-    return this.generateTokens({
-      id: user.id,
-      email: user.email,
-      emailVerified: true,
-      firstName: user.name,
-      fullName: user.name,
-      lastName: user.name,
-      role: Role.User,
-      imgUrl: user.picture,
-    });
+    return this.generateTokens('', '');
   }
 
   async refresh(input: RefreshInput): Promise<ApiTokensDto> {
+    input;
     try {
-      const payload = await this.jwtService.verifyAsync(input.refreshToken, {
-        secret: this.jwtRefreshSecret,
-      });
-      const user = await this.userRepo.findOneOrFail({ id: payload.sub });
-      return await this.generateTokens(user);
+      // const payload = await this.jwtService.verifyAsync(input.refreshToken, {
+      //   secret: this.jwtRefreshSecret,
+      // });
+      // const user = await this.userRepo.findOneOrFail({ id: payload.sub });
+      return await this.generateTokens('user', '');
     } catch {
       throw new UnauthorizedException('Invalid refresh token');
     }
   }
 
-  private async generateTokens(user: User): Promise<ApiTokensDto> {
-    const payload = { sub: user.id };
+  async generateTokens(
+    userId: string,
+    tenantId: string,
+  ): Promise<ApiTokensDto> {
+    const payload = { sub: userId, tenantId };
 
     const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '1hr',
@@ -100,7 +94,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  private hashPassword(password: string) {
+  hashPassword(password: string) {
     return bcrypt.hash(password, 10);
   }
 }

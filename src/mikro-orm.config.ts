@@ -3,6 +3,8 @@ import { ConfigService } from '@nestjs/config';
 
 import entities from './db/entities';
 import { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const configService = new ConfigService();
 

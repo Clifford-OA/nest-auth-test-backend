@@ -1,14 +1,17 @@
+import { TenantRegistrationController } from './controllers/tenant-registration.controller';
+import { TenantRegistrationService } from './services/tenant-registration.service';
+import { DatabaseService } from './services/database.service';
 import { WebhooksController } from './controllers/webhooks.controller';
 import { PaymentController } from './controllers/payment.controller';
 import { PaymentService } from './services/payment.service';
 import { AzureBlobController } from './controllers/azure-blob.controller';
 import { AzureBlobService } from './services/azure-blob.service';
 import { EmailService } from './email/email.service';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import entities from './db/entities';
 import { AuthService } from './services/auth.service';
-import { AuthController } from './controllers/auth.controller';
+// import { AuthController } from './controllers/auth.controller';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { UserService } from './services/user.service';
@@ -18,7 +21,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtStrategy } from './misc/jwt.strategy';
 import { GoogleOauthStrategy } from './misc/google-oauth.strategy';
 import { RequestContextModule } from 'nestjs-request-context';
-
+import { TenantMiddleware } from './misc/tenant.middleware';
+import { TenantRequestContext } from './misc/tenant-request-context';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, expandVariables: true }),
@@ -28,13 +32,17 @@ import { RequestContextModule } from 'nestjs-request-context';
     RequestContextModule,
   ],
   controllers: [
+    TenantRegistrationController,
     WebhooksController,
     PaymentController,
     AzureBlobController,
-    AuthController,
+    // AuthController,
     UserController,
   ],
   providers: [
+    TenantRegistrationService,
+    TenantRequestContext,
+    DatabaseService,
     PaymentService,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     AzureBlobService,
@@ -45,4 +53,8 @@ import { RequestContextModule } from 'nestjs-request-context';
     GoogleOauthStrategy,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TenantMiddleware).forRoutes('*');
+  }
+}

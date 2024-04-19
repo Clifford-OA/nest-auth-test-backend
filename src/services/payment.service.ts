@@ -1,4 +1,5 @@
 import { LockMode } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/postgresql';
 import {
   Injectable,
   Logger,
@@ -11,6 +12,7 @@ import {
   PaymentRepository,
   TransactionStatus,
 } from 'src/db/entities/payment.entity';
+import { Tenant } from 'src/db/entities/tenant.entity';
 import HttpContext from 'src/misc/http-context.middleware';
 import Stripe from 'stripe';
 
@@ -26,6 +28,7 @@ export class PaymentService {
   constructor(
     private readonly configService: ConfigService,
     private readonly paymentRepo: PaymentRepository,
+    private readonly em: EntityManager,
   ) {}
 
   async makePayment() {
@@ -35,8 +38,13 @@ export class PaymentService {
 
     const webUrl = 'http://localhost:3000';
 
+    const tenant = await this.em.findOneOrFail(Tenant, user.tenantId, {
+      failHandler: () =>
+        new NotFoundException(`Tenant with ID: ${user.tenantId} not found`),
+    });
+
     // create payment
-    const payment = this.paymentRepo.create({ user });
+    const payment = this.paymentRepo.create({ amount: 3000, tenant });
 
     const stripeSession = await this.stripe.checkout.sessions.create({
       mode: 'payment',
