@@ -12,11 +12,15 @@ import bcrypt from 'bcryptjs';
 import { FilterQuery } from '@mikro-orm/core';
 import { ApiTokensDto } from 'src/dtos/api-token.dto';
 import { ConfigService } from '@nestjs/config';
+import { OAuth2Client } from 'google-auth-library';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
+  private readonly clientIds: string[];
   private readonly jwtRefreshSecret: string;
+  private readonly authClient = new OAuth2Client();
+
   constructor(
     private readonly em: EntityManager,
     private readonly jwtService: JwtService,
@@ -24,6 +28,7 @@ export class AuthService {
     configService: ConfigService,
   ) {
     this.jwtRefreshSecret = configService.get('JWT_REFRESH_SECRET');
+    this.clientIds = [configService.get('GOOGLE_CLIENT_ID')];
   }
 
   async registerUser(input: CreateUserInput) {
@@ -71,6 +76,19 @@ export class AuthService {
       role: Role.User,
       imgUrl: user.picture,
     });
+  }
+
+  async googleOauthWithToken(token: string) {
+    const ticket = await this.authClient.verifyIdToken({
+      idToken: token,
+      audience: this.clientIds,
+    });
+
+    const payload = ticket.getPayload();
+
+    if (!payload) throw new BadRequestException('Invalid ID token');
+
+    console.log({ payload });
   }
 
   async refresh(input: RefreshInput): Promise<ApiTokensDto> {

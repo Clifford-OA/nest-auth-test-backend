@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  Param,
   Post,
   Req,
   Res,
@@ -49,5 +50,10 @@ export class AuthController {
     } catch (error) {
       res.status(500).send({ success: false, message: error.message });
     }
+  }
+
+  @Post('/login/google/with-token/:id')
+  async googleAuthWithToken(@Param('id') id: string) {
+    return this.authService.googleOauthWithToken(id);
   }
 }
