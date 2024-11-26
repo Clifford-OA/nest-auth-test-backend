@@ -31,4 +31,21 @@ export class AzureBlobController {
   async azureUploadFile(@UploadedFile() image?: Express.Multer.File) {
     return await this.azureBlobService.upload(image);
   }
+
+  @Post('/s3/upload-image')
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image: { type: 'string', format: 'binary' },
+        name: { type: 'string' },
+      },
+    },
+  })
+  @ApiOperation({ summary: 'Upload file to s3 test' })
+  async s3UploadFile(@UploadedFile() image?: Express.Multer.File) {
+    return await this.azureBlobService.upload(image);
+  }
 }
