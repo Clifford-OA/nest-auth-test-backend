@@ -1,12 +1,11 @@
 import { Entity, Enum, Property, PrimaryKey } from '@mikro-orm/core';
-import { EntityRepository } from '@mikro-orm/postgresql';
 
 export enum Role {
   User,
   Admin,
 }
 
-@Entity({ customRepository: () => UserRepository })
+@Entity()
 export class User {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   id: string;
@@ -23,7 +22,7 @@ export class User {
   @Property({ hidden: true })
   passwordHash?: string;
 
-  @Property({ hidden: true })
+  @Property({ hidden: true, nullable: true })
   passwordResetKey?: string;
 
   @Property()
@@ -37,8 +36,6 @@ export class User {
     return `${this.firstName} ${this.lastName}`;
   }
 
-  @Property()
+  @Property({ nullable: true })
   imgUrl?: string;
 }
-
-export class UserRepository extends EntityRepository<User> {}

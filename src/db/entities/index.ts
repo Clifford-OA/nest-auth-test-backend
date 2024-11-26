@@ -1,3 +1,4 @@
-import { User } from './user.entity';
+import { Payment } from './payment.entity';
+import { Tenant } from './tenant.entity';
 
-export default [User];
+export default [Tenant, Payment];
