@@ -23,6 +23,7 @@ import { GoogleOauthStrategy } from './misc/google-oauth.strategy';
 import { RequestContextModule } from 'nestjs-request-context';
 import { TenantMiddleware } from './misc/tenant.middleware';
 import { TenantRequestContext } from './misc/tenant-request-context';
+import { SocketModule } from './socket/socket.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, expandVariables: true }),
@@ -30,6 +31,7 @@ import { TenantRequestContext } from './misc/tenant-request-context';
     MikroOrmModule.forFeature(entities),
     JwtModule.register({ secret: process.env.JWT_SECRET }),
     RequestContextModule,
+    SocketModule,
   ],
   controllers: [
     TenantRegistrationController,
