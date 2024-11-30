@@ -24,10 +24,11 @@ import { RequestContextModule } from 'nestjs-request-context';
 import { TenantMiddleware } from './misc/tenant.middleware';
 import { TenantRequestContext } from './misc/tenant-request-context';
 import { SocketModule } from './socket/socket.module';
+import mikroOrmConfig from './mikro-orm.config';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, expandVariables: true }),
-    MikroOrmModule.forRoot(),
+    MikroOrmModule.forRoot(mikroOrmConfig),
     MikroOrmModule.forFeature(entities),
     JwtModule.register({ secret: process.env.JWT_SECRET }),
     RequestContextModule,

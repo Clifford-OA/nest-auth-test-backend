@@ -7,7 +7,9 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: ['http:localhost:3000'],
+})
 export class SocketService implements OnModuleInit {
   private readonly logger = new Logger(SocketService.name);
 
