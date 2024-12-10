@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Body,
   Controller,
   HttpCode,
   Logger,
@@ -7,11 +8,11 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiExcludeController, ApiTags } from '@nestjs/swagger';
-import { PublicApi } from 'src/decorators/public-api-decorator';
+// import { PublicApi } from 'src/decorators/public-api-decorator';
 import { PaymentService } from 'src/services/payment.service';
 
 @Controller('/webhooks')
-@PublicApi()
+// @PublicApi()
 @ApiTags('Webhooks')
 @ApiExcludeController(true)
 export class WebhooksController {
@@ -29,5 +30,10 @@ export class WebhooksController {
       this.logger.error(err);
       throw new BadRequestException();
     }
+  }
+
+  @Post('/node-red')
+  async nodeRedWebhook(@Body() input: any) {
+    this.logger.log(input);
   }
 }
