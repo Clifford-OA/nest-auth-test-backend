@@ -1,3 +1,4 @@
 {
-  "liveServer.settings.multiRootWorkspaceName": "auth-test"
+  "liveServer.settings.multiRootWorkspaceName": "auth-test",
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }
