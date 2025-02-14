@@ -9,7 +9,7 @@ import { Server } from 'socket.io';
 
 @WebSocketGateway({
   transports: ['websocket'],
-  cors: ['http:localhost:3000'],
+  cors: ['http://localhost:3000'],
 })
 export class SocketService {
   private readonly logger = new Logger(SocketService.name);

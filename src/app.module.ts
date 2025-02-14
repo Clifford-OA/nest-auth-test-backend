@@ -31,6 +31,8 @@ import { ClerkStrategy } from './misc/clerk.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { ClerkService } from './services/clerk-auth.service';
 import { ClerkController } from './controllers/clerk.controller';
+import { ClerkWebhookController } from './controllers/clerk-webhook.controller';
+import { ClerkWebhookService } from './services/clerk-webhook.service';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, expandVariables: true }),
@@ -49,6 +51,7 @@ import { ClerkController } from './controllers/clerk.controller';
     // AuthController,
     // UserController,
     ClerkController,
+    ClerkWebhookController,
   ],
   providers: [
     // TenantRegistrationService,
@@ -66,6 +69,7 @@ import { ClerkController } from './controllers/clerk.controller';
     ClerkClientProvider,
     ClerkStrategy,
     ClerkService,
+    ClerkWebhookService,
   ],
 })
 export class AppModule {
