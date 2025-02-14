@@ -8,8 +8,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { IS_PUBLIC_KEY } from 'src/decorators/public-api-decorator';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('clerk') {
-  constructor(private reflector: Reflector) {
+export class JwtAuthGuard extends AuthGuard('jwt') {
+  constructor(private readonly reflector: Reflector) {
     super();
   }
 
@@ -23,7 +23,9 @@ export class JwtAuthGuard extends AuthGuard('clerk') {
 
   handleRequest(err: any, user: any) {
     if (err) throw new UnauthorizedException();
-    else if (!user) throw new UnauthorizedException();
+    else if (!user) {
+      throw new UnauthorizedException();
+    }
     return user;
   }
 }

@@ -8,10 +8,10 @@
   "scripts": {
     "db:update": "mikro-orm schema:update --run",
     "build:email": "mjml src/email/templates/*.mjml -o dist/email/templates/. --config.minify true",
+    "start:dev": "nest start --watch",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

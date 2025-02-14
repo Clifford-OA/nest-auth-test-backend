@@ -6,19 +6,16 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+import fs from 'fs';
+import * as path from 'path';
 import { Tenant } from 'src/db/entities/tenant.entity';
-import { User } from 'src/db/tenant-entities/user.entity';
 import { CreateTenantInput } from 'src/dtos/tenant.dto';
 import { AuthService } from './auth.service';
 import { DatabaseService } from './database.service';
-import fs from 'fs';
-import * as path from 'path';
-// import * as childProcess from 'child_process';
-// import { TenantRequestContext } from 'src/misc/tenant-request-context';
-import Docker from 'dockerode';
 import axios from 'axios';
+import Docker from 'dockerode';
+import { User } from 'src/db/entities/user.entity';
 import { getNodeRedConfig } from 'src/utils/node-red-config';
-// import HttpContext from 'src/misc/http-context.middleware';
 
 @Injectable()
 export class TenantRegistrationService {

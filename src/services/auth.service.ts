@@ -11,6 +11,7 @@ import bcrypt from 'bcryptjs';
 import { ApiTokensDto } from 'src/dtos/api-token.dto';
 import { ConfigService } from '@nestjs/config';
 import { OAuth2Client } from 'google-auth-library';
+import { User } from 'src/db/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -29,19 +30,18 @@ export class AuthService {
   }
 
   async registerUser(input: CreateUserInput) {
-    input;
     // check whether email exist
-    // let user = await this.userRepo.findOne({ email: input.email });
+    let user = await this.em.findOne(User, { email: input.email });
 
-    // if (user) throw new BadRequestException('Email already exist');
-    // this.logger.log(`Started registering a user: ${input.email}`);
+    if (user) throw new BadRequestException('Email already exist');
 
-    // user = this.userRepo.create({
-    //   ...input,
-    //   passwordHash: await this.hashPassword(input.password),
-    // });
+    user = this.em.create(User, {
+      ...input,
+      passwordHash: await this.hashPassword(input.password),
+    });
 
-    // await this.em.flush();
+    await this.em.flush();
+    return 'successfully created user';
   }
 
   async loginUser(input: LoginInput) {

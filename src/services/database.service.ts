@@ -2,7 +2,7 @@
 import { EntityManager, MikroORM } from '@mikro-orm/postgresql';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import entities from 'src/db/tenant-entities';
+import entities from 'src/db/entities';
 // cfd607a0-1628-48ac-ba68-d894952bef3f //
 @Injectable() //
 export class DatabaseService {
@@ -11,7 +11,7 @@ export class DatabaseService {
   constructor() {}
 
   // private orm: MikroORM;
-  private entityManagers: Map<string, EntityManager> = new Map();
+  private readonly entityManagers: Map<string, EntityManager> = new Map();
   private readonly configService = new ConfigService();
 
   async getEntityManager(tenantId: string): Promise<EntityManager> {

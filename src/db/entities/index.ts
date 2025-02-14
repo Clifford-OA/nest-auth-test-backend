@@ -1,5 +1,5 @@
-import { User } from '../tenant-entities/user.entity';
 import { Payment } from './payment.entity';
 import { Tenant } from './tenant.entity';
+import { User } from './user.entity';
 
 export default [Tenant, Payment, User];

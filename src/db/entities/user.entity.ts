@@ -38,4 +38,12 @@ export class User {
 
   @Property({ nullable: true })
   imgUrl?: string;
+
+  toDto() {
+    return {
+      id: this.id,
+      name: this.fullName,
+      email: this.email,
+    };
+  }
 }
