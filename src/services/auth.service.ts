@@ -1,3 +1,5 @@
+import { FilterQuery } from '@mikro-orm/core';
+import { InjectEntityManager } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 import {
   BadRequestException,
@@ -5,20 +7,20 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { User, UserRepository } from 'src/db/entities/user.entity';
-import { CreateUserInput, LoginInput, RefreshInput } from 'src/dtos/user.dto';
-import bcrypt from 'bcryptjs';
-import { FilterQuery } from '@mikro-orm/core';
-import { ApiTokensDto } from 'src/dtos/api-token.dto';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import bcrypt from 'bcryptjs';
+import { User, UserRepository } from 'src/db/entities/user.entity';
+import { ApiTokensDto } from 'src/dtos/api-token.dto';
+import { CreateUserInput, LoginInput, RefreshInput } from 'src/dtos/user.dto';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
   private readonly jwtRefreshSecret: string;
   constructor(
-    private readonly em: EntityManager,
+    @InjectEntityManager('Database_1') private readonly emDB1: EntityManager,
+    @InjectEntityManager('Database_2') private readonly emDB2: EntityManager,
     private readonly jwtService: JwtService,
     private readonly userRepo: UserRepository,
     configService: ConfigService,
@@ -26,10 +28,13 @@ export class AuthService {
     this.jwtRefreshSecret = configService.get('JWT_REFRESH_SECRET');
   }
 
-  async registerUser(input: CreateUserInput) {
-    // check whether email exist
-    let user = await this.userRepo.findOne({ email: input.email });
+  private readonly em = this.emDB1.fork();
+  private readonly em2 = this.emDB2.fork();
 
+  async registerUser(input: CreateUserInput) {
+    // check whether email exist//
+    let user = await this.userRepo.findOne({ email: input.email });
+    //
     if (user) throw new BadRequestException('Email already exist');
     this.logger.log(`Started registering a user: ${input.email}`);
 
@@ -38,7 +43,7 @@ export class AuthService {
       passwordHash: await this.hashPassword(input.password),
     });
 
-    await this.em.flush();
+    await this.userRepo.getEntityManager().flush();
   }
 
   async loginUser(input: LoginInput) {

@@ -1,13 +1,8 @@
 import { Entity, Enum, Property, PrimaryKey } from '@mikro-orm/core';
-import { InjectEntityManager } from '@mikro-orm/nestjs';
-import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
+import { EntityRepository } from '@mikro-orm/postgresql';
+import { Role } from '../entities/user.entity';
 
-export enum Role {
-  User,
-  Admin,
-}
-
-@Entity({ customRepository: () => UserRepository })
+@Entity({ customRepository: () => SecondUserRepository })
 export class User {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   id: string;
@@ -42,8 +37,4 @@ export class User {
   imgUrl?: string;
 }
 
-export class UserRepository extends EntityRepository<User> {
-  constructor(@InjectEntityManager('Database_1') em: EntityManager) {
-    super(em.fork(), User);
-  }
-}
+export class SecondUserRepository extends EntityRepository<User> {}
