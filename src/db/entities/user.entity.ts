@@ -1,6 +1,5 @@
-import { Entity, Enum, Property, PrimaryKey } from '@mikro-orm/core';
-import { InjectEntityManager } from '@mikro-orm/nestjs';
-import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
+import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core';
+import { EntityRepository } from '@mikro-orm/postgresql';
 
 export enum Role {
   User,
@@ -42,8 +41,4 @@ export class User {
   imgUrl?: string;
 }
 
-export class UserRepository extends EntityRepository<User> {
-  constructor(@InjectEntityManager('Database_1') em: EntityManager) {
-    super(em.fork(), User);
-  }
-}
+export class UserRepository extends EntityRepository<User> {}

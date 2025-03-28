@@ -1,5 +1,4 @@
 import { FilterQuery } from '@mikro-orm/core';
-import { InjectEntityManager } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 import {
   BadRequestException,
@@ -19,17 +18,13 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
   private readonly jwtRefreshSecret: string;
   constructor(
-    @InjectEntityManager('Database_1') private readonly emDB1: EntityManager,
-    @InjectEntityManager('Database_2') private readonly emDB2: EntityManager,
+    private readonly em: EntityManager,
     private readonly jwtService: JwtService,
     private readonly userRepo: UserRepository,
     configService: ConfigService,
   ) {
     this.jwtRefreshSecret = configService.get('JWT_REFRESH_SECRET');
   }
-
-  private readonly em = this.emDB1.fork();
-  private readonly em2 = this.emDB2.fork();
 
   async registerUser(input: CreateUserInput) {
     // check whether email exist//
@@ -43,7 +38,7 @@ export class AuthService {
       passwordHash: await this.hashPassword(input.password),
     });
 
-    await this.userRepo.getEntityManager().flush();
+    await this.em.flush();
   }
 
   async loginUser(input: LoginInput) {
